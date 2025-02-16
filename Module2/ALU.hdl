@@ -1,0 +1,237 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/2/ALU.hdl
+/**
+ * ALU (Arithmetic Logic Unit):
+ * Computes out = one of the following functions:
+ *                0, 1, -1,
+ *                x, y, !x, !y, -x, -y,
+ *                x + 1, y + 1, x - 1, y - 1,
+ *                x + y, x - y, y - x,
+ *                x & y, x | y
+ * on the 16-bit inputs x, y,
+ * according to the input bits zx, nx, zy, ny, f, no.
+ * In addition, computes the two output bits:
+ * if (out == 0) zr = 1, else zr = 0
+ * if (out < 0)  ng = 1, else ng = 0
+ */
+// Implementation: Manipulates the x and y inputs
+// and operates on the resulting values, as follows:
+// if (zx == 1) sets x = 0        // 16-bit constant
+// if (nx == 1) sets x = !x       // bitwise not
+// if (zy == 1) sets y = 0        // 16-bit constant
+// if (ny == 1) sets y = !y       // bitwise not
+// if (f == 1)  sets out = x + y  // integer 2's complement addition
+// if (f == 0)  sets out = x & y  // bitwise and
+// if (no == 1) sets out = !out   // bitwise not
+
+CHIP ALU {
+    IN  
+        x[16], y[16],  // 16-bit inputs        
+        zx, // zero the x input?
+        nx, // negate the x input?
+        zy, // zero the y input?
+        ny, // negate the y input?
+        f,  // compute (out = x + y) or (out = x & y)?
+        no; // negate the out output?
+    OUT 
+        out[16], // 16-bit output
+        zr,      // if (out == 0) equals 1, else 0
+        ng;      // if (out < 0)  equals 1, else 0
+
+    PARTS:
+    // Process x input
+	
+	// Zero-processing 
+    Mux(a=x[0], b=false,  sel=zx, out=PreStage1x0);
+    Mux(a=x[1],b=false,sel=zx, out=PreStage1x1);
+    Mux(a=x[2],b=false,sel=zx, out=PreStage1x2);
+    Mux(a=x[3],b=false,sel=zx, out=PreStage1x3);
+    Mux(a=x[4],b=false,sel=zx, out=PreStage1x4);
+    Mux(a=x[5],b=false,sel=zx, out=PreStage1x5);
+    Mux(a=x[6],b=false,sel=zx, out=PreStage1x6);
+    Mux(a=x[7],b=false,sel=zx, out=PreStage1x7);
+    Mux(a=x[8],b=false,sel=zx, out=PreStage1x8);
+    Mux(a=x[9],b=false,sel=zx, out=PreStage1x9);
+    Mux(a=x[10],b=false,sel=zx, out=PreStage1x10);
+    Mux(a=x[11],b=false,sel=zx, out=PreStage1x11);
+    Mux(a=x[12],b=false,sel=zx, out=PreStage1x12);
+    Mux(a=x[13],b=false,sel=zx, out=PreStage1x13);
+    Mux(a=x[14],b=false,sel=zx, out=PreStage1x14);
+    Mux(a=x[15],b=false,sel=zx, out=PreStage1x15);	
+	
+	
+	// NOT-processing
+    Xor(a=PreStage1x0, b=nx, out=PreStage2x0);
+    Xor(a=PreStage1x1, b=nx, out=PreStage2x1);
+    Xor(a=PreStage1x2, b=nx, out=PreStage2x2);
+    Xor(a=PreStage1x3, b=nx, out=PreStage2x3);
+    Xor(a=PreStage1x4, b=nx, out=PreStage2x4);
+    Xor(a=PreStage1x5, b=nx, out=PreStage2x5);
+    Xor(a=PreStage1x6, b=nx, out=PreStage2x6);
+    Xor(a=PreStage1x7, b=nx, out=PreStage2x7);
+    Xor(a=PreStage1x8, b=nx, out=PreStage2x8);
+    Xor(a=PreStage1x9, b=nx, out=PreStage2x9);
+    Xor(a=PreStage1x10, b=nx, out=PreStage2x10);
+    Xor(a=PreStage1x11, b=nx, out=PreStage2x11);
+    Xor(a=PreStage1x12, b=nx, out=PreStage2x12);
+    Xor(a=PreStage1x13, b=nx, out=PreStage2x13);
+    Xor(a=PreStage1x14, b=nx, out=PreStage2x14);
+    Xor(a=PreStage1x15, b=nx, out=PreStage2x15);
+
+
+
+    // Process y input
+	// Zero-processing 
+    Mux(a=y[0], b=false,  sel=zy, out=PreStage1y0);
+    Mux(a=y[1],b=false,sel=zy, out=PreStage1y1);
+    Mux(a=y[2],b=false,sel=zy, out=PreStage1y2);
+    Mux(a=y[3],b=false,sel=zy, out=PreStage1y3);
+    Mux(a=y[4],b=false,sel=zy, out=PreStage1y4);
+    Mux(a=y[5],b=false,sel=zy, out=PreStage1y5);
+    Mux(a=y[6],b=false,sel=zy, out=PreStage1y6);
+    Mux(a=y[7],b=false,sel=zy, out=PreStage1y7);
+    Mux(a=y[8],b=false,sel=zy, out=PreStage1y8);
+    Mux(a=y[9],b=false,sel=zy, out=PreStage1y9);
+    Mux(a=y[10],b=false,sel=zy, out=PreStage1y10);
+    Mux(a=y[11],b=false,sel=zy, out=PreStage1y11);
+    Mux(a=y[12],b=false,sel=zy, out=PreStage1y12);
+    Mux(a=y[13],b=false,sel=zy, out=PreStage1y13);
+    Mux(a=y[14],b=false,sel=zy, out=PreStage1y14);
+    Mux(a=y[15],b=false,sel=zy, out=PreStage1y15);	
+	
+	
+	// NOT-processing
+    Xor(a=PreStage1y0, b=ny, out=PreStage2y0);
+    Xor(a=PreStage1y1, b=ny, out=PreStage2y1);
+    Xor(a=PreStage1y2, b=ny, out=PreStage2y2);
+    Xor(a=PreStage1y3, b=ny, out=PreStage2y3);
+    Xor(a=PreStage1y4, b=ny, out=PreStage2y4);
+    Xor(a=PreStage1y5, b=ny, out=PreStage2y5);
+    Xor(a=PreStage1y6, b=ny, out=PreStage2y6);
+    Xor(a=PreStage1y7, b=ny, out=PreStage2y7);
+    Xor(a=PreStage1y8, b=ny, out=PreStage2y8);
+    Xor(a=PreStage1y9, b=ny, out=PreStage2y9);
+    Xor(a=PreStage1y10, b=ny, out=PreStage2y10);
+    Xor(a=PreStage1y11, b=ny, out=PreStage2y11);
+    Xor(a=PreStage1y12, b=ny, out=PreStage2y12);
+    Xor(a=PreStage1y13, b=ny, out=PreStage2y13);
+    Xor(a=PreStage1y14, b=ny, out=PreStage2y14);
+    Xor(a=PreStage1y15, b=ny, out=PreStage2y15);
+
+    // Computation
+	
+	/* Under normal circumstances, I would use the Add16 and And16 logic gates, but I'm unable to due to being unable to create 16-bit internal pins. */
+    HalfAdder(a=PreStage2x0, b=PreStage2y0, sum=AddXY0 ,carry= CarryAdd0);
+	FullAdder(a=PreStage2x1 , b=PreStage2y1 , c=CarryAdd0 , sum=AddXY1 , carry=CarryAdd1 );
+	FullAdder(a=PreStage2x2 , b=PreStage2y2 , c=CarryAdd1 , sum=AddXY2 , carry=CarryAdd2 );
+	FullAdder(a=PreStage2x3 , b=PreStage2y3 , c=CarryAdd2 , sum=AddXY3 , carry=CarryAdd3 );
+	FullAdder(a=PreStage2x4 , b=PreStage2y4 , c=CarryAdd3 , sum=AddXY4 , carry=CarryAdd4 );
+	FullAdder(a=PreStage2x5 , b=PreStage2y5 , c=CarryAdd4 , sum=AddXY5 , carry=CarryAdd5 );
+	FullAdder(a=PreStage2x6 , b=PreStage2y6 , c=CarryAdd5 , sum=AddXY6 , carry=CarryAdd6 );
+	FullAdder(a=PreStage2x7 , b=PreStage2y7 , c=CarryAdd6 , sum=AddXY7 , carry=CarryAdd7 );
+	FullAdder(a=PreStage2x8 , b=PreStage2y8 , c=CarryAdd7 , sum=AddXY8 , carry=CarryAdd8 );
+	FullAdder(a=PreStage2x9 , b=PreStage2y9 , c=CarryAdd8 , sum=AddXY9 , carry=CarryAdd9 );
+	FullAdder(a=PreStage2x10, b=PreStage2y10, c=CarryAdd9 , sum=AddXY10, carry=CarryAdd10);
+	FullAdder(a=PreStage2x11, b=PreStage2y11, c=CarryAdd10, sum=AddXY11, carry=CarryAdd11);
+	FullAdder(a=PreStage2x12, b=PreStage2y12, c=CarryAdd11, sum=AddXY12, carry=CarryAdd12);
+	FullAdder(a=PreStage2x13, b=PreStage2y13, c=CarryAdd12, sum=AddXY13, carry=CarryAdd13);
+	FullAdder(a=PreStage2x14, b=PreStage2y14, c=CarryAdd13, sum=AddXY14, carry=CarryAdd14);
+	FullAdder(a=PreStage2x15, b=PreStage2y15, c=CarryAdd14, sum=AddXY15, carry=CarryAdd15);
+	
+	// And
+	And(a=PreStage2x0 , b=PreStage2y0 , out=AndXY0 );
+	And(a=PreStage2x1 , b=PreStage2y1 , out=AndXY1 );
+	And(a=PreStage2x2 , b=PreStage2y2 , out=AndXY2 );
+	And(a=PreStage2x3 , b=PreStage2y3 , out=AndXY3 );
+	And(a=PreStage2x4 , b=PreStage2y4 , out=AndXY4 );
+	And(a=PreStage2x5 , b=PreStage2y5 , out=AndXY5 );
+	And(a=PreStage2x6 , b=PreStage2y6 , out=AndXY6 );
+	And(a=PreStage2x7 , b=PreStage2y7 , out=AndXY7 );
+	And(a=PreStage2x8 , b=PreStage2y8 , out=AndXY8 );
+	And(a=PreStage2x9 , b=PreStage2y9 , out=AndXY9 );
+	And(a=PreStage2x10, b=PreStage2y10, out=AndXY10);
+	And(a=PreStage2x11, b=PreStage2y11, out=AndXY11);
+	And(a=PreStage2x12, b=PreStage2y12, out=AndXY12);
+	And(a=PreStage2x13, b=PreStage2y13, out=AndXY13);
+	And(a=PreStage2x14, b=PreStage2y14, out=AndXY14);
+	And(a=PreStage2x15, b=PreStage2y15, out=AndXY15);
+
+
+	// Mux
+	Mux(a=AndXY0 , b=AddXY0 , sel=f, out=MuxXY0 );
+	Mux(a=AndXY1 , b=AddXY1 , sel=f, out=MuxXY1 );
+	Mux(a=AndXY2 , b=AddXY2 , sel=f, out=MuxXY2 );
+	Mux(a=AndXY3 , b=AddXY3 , sel=f, out=MuxXY3 );
+	Mux(a=AndXY4 , b=AddXY4 , sel=f, out=MuxXY4 );
+	Mux(a=AndXY5 , b=AddXY5 , sel=f, out=MuxXY5 );
+	Mux(a=AndXY6 , b=AddXY6 , sel=f, out=MuxXY6 );
+	Mux(a=AndXY7 , b=AddXY7 , sel=f, out=MuxXY7 );
+	Mux(a=AndXY8 , b=AddXY8 , sel=f, out=MuxXY8 );
+	Mux(a=AndXY9 , b=AddXY9 , sel=f, out=MuxXY9 );
+	Mux(a=AndXY10, b=AddXY10, sel=f, out=MuxXY10);
+	Mux(a=AndXY11, b=AddXY11, sel=f, out=MuxXY11);
+	Mux(a=AndXY12, b=AddXY12, sel=f, out=MuxXY12);
+	Mux(a=AndXY13, b=AddXY13, sel=f, out=MuxXY13);
+	Mux(a=AndXY14, b=AddXY14, sel=f, out=MuxXY14);
+	Mux(a=AndXY15, b=AddXY15, sel=f, out=MuxXY15);
+	
+	// Check negatation.
+	Xor(a=MuxXY0 , b=no, out=FinalXY0 , out=out[0]);
+	Xor(a=MuxXY1 , b=no, out=FinalXY1 , out=out[1]);
+	Xor(a=MuxXY2 , b=no, out=FinalXY2 , out=out[2]);
+	Xor(a=MuxXY3 , b=no, out=FinalXY3 , out=out[3]);
+	Xor(a=MuxXY4 , b=no, out=FinalXY4 , out=out[4]);
+	Xor(a=MuxXY5 , b=no, out=FinalXY5 , out=out[5]);
+	Xor(a=MuxXY6 , b=no, out=FinalXY6 , out=out[6]);
+	Xor(a=MuxXY7 , b=no, out=FinalXY7 , out=out[7]);
+	Xor(a=MuxXY8 , b=no, out=FinalXY8 , out=out[8]);
+	Xor(a=MuxXY9 , b=no, out=FinalXY9 , out=out[9]);
+	Xor(a=MuxXY10, b=no, out=FinalXY10, out=out[10]);
+	Xor(a=MuxXY11, b=no, out=FinalXY11, out=out[11]);
+	Xor(a=MuxXY12, b=no, out=FinalXY12, out=out[12]);
+	Xor(a=MuxXY13, b=no, out=FinalXY13, out=out[13]);
+	Xor(a=MuxXY14, b=no, out=FinalXY14, out=out[14]);
+	Xor(a=MuxXY15, b=no, out=FinalXY15, out=out[15]);
+	
+
+    // Post-process
+	
+	Not(in=FinalXY0 , out=NOTFinalXY0 );
+	Not(in=FinalXY1 , out=NOTFinalXY1 );
+	Not(in=FinalXY2 , out=NOTFinalXY2 );
+	Not(in=FinalXY3 , out=NOTFinalXY3 );
+	Not(in=FinalXY4 , out=NOTFinalXY4 );
+	Not(in=FinalXY5 , out=NOTFinalXY5 );
+	Not(in=FinalXY6 , out=NOTFinalXY6 );
+	Not(in=FinalXY7 , out=NOTFinalXY7 );
+	Not(in=FinalXY8 , out=NOTFinalXY8 );
+	Not(in=FinalXY9 , out=NOTFinalXY9 );
+	Not(in=FinalXY10, out=NOTFinalXY10);
+	Not(in=FinalXY11, out=NOTFinalXY11);
+	Not(in=FinalXY12, out=NOTFinalXY12);
+	Not(in=FinalXY13, out=NOTFinalXY13);
+	Not(in=FinalXY14, out=NOTFinalXY14);
+	Not(in=FinalXY15, out=NOTFinalXY15);
+
+	
+    And(a=NOTFinalXY0 , b=NOTFinalXY1, out=zrXY0 );
+    And(a=zrXY0 , b=NOTFinalXY2 , out=zrXY1 );
+    And(a=zrXY1 , b=NOTFinalXY3 , out=zrXY2 );
+    And(a=zrXY2 , b=NOTFinalXY4 , out=zrXY3 );
+    And(a=zrXY3 , b=NOTFinalXY5 , out=zrXY4 );
+    And(a=zrXY4 , b=NOTFinalXY6 , out=zrXY5 );
+    And(a=zrXY5 , b=NOTFinalXY7 , out=zrXY6 );
+    And(a=zrXY6 , b=NOTFinalXY8 , out=zrXY7 );
+    And(a=zrXY7 , b=NOTFinalXY9 , out=zrXY8 );
+    And(a=zrXY8 , b=NOTFinalXY10, out=zrXY9 );
+    And(a=zrXY9 , b=NOTFinalXY11, out=zrXY10);
+    And(a=zrXY10, b=NOTFinalXY12, out=zrXY11);
+    And(a=zrXY11, b=NOTFinalXY13, out=zrXY12);
+    And(a=zrXY12, b=NOTFinalXY14, out=zrXY13);
+    And(a=zrXY13, b=NOTFinalXY15, out=zr);
+
+    And(a=FinalXY15, b=true, out=ng);
+	
+}

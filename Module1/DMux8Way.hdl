@@ -1,0 +1,66 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/1/DMux8Way.hdl
+/**
+ * 8-way demultiplexor:
+ * [a, b, c, d, e, f, g, h] = [in, 0,  0,  0,  0,  0,  0,  0] if sel = 000
+ *                            [0, in,  0,  0,  0,  0,  0,  0] if sel = 001
+ *                            [0,  0, in,  0,  0,  0,  0,  0] if sel = 010
+ *                            [0,  0,  0, in,  0,  0,  0,  0] if sel = 011
+ *                            [0,  0,  0,  0, in,  0,  0,  0] if sel = 100
+ *                            [0,  0,  0,  0,  0, in,  0,  0] if sel = 101
+ *                            [0,  0,  0,  0,  0,  0, in,  0] if sel = 110
+ *                            [0,  0,  0,  0,  0,  0,  0, in] if sel = 111
+ */
+CHIP DMux8Way {
+    IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+
+    PARTS:
+   // NOT ALL THREE SELECT ELEMENTS
+    Nand(a=sel[0], b=sel[0], out=NotSel0);
+    Nand(a=sel[1], b=sel[1], out=NotSel1);
+    Nand(a=sel[2], b=sel[2], out=NotSel2);
+
+    // Position checkers -> mentions used selectors
+    And(a=NotSel1, b=NotSel0, out=CheckMidRightBits0); // Used: a, e
+	And(a=sel[0], b=NotSel1, out=CheckMid0Right1Bits); // Used: b, f
+	And(a=sel[1], b=NotSel0, out=CheckMid1Right0Bits); // Used: c, g
+	And(a=sel[0], b=sel[1], out=CheckMidRightBits1); // Used: d, h
+	
+    // Check for 'a' selector -> 000
+    And(a=CheckMidRightBits0, b=NotSel2, out=aSelector);
+
+    // Check for 'b' selector -> 001
+    And(a=CheckMid0Right1Bits, b=NotSel2, out=bSelector);
+    
+    // Check for 'c' selector -> 010
+    And(a=CheckMid1Right0Bits, b=NotSel2, out=cSelector);
+
+    // Check for 'd' selector -> 011
+	And(a=CheckMidRightBits1, b=NotSel2, out=dSelector);
+
+    // Check for 'e' selector -> 100
+	And(a=CheckMidRightBits0, b=sel[2], out=eSelector);
+	
+    // Check for 'f' selector -> 101
+	And(a=CheckMid0Right1Bits, b=sel[2], out=fSelector);
+
+    // Check for 'g' selector -> 110
+	And(a=CheckMid1Right0Bits, b=sel[2], out=gSelector);
+	
+    // Check for 'h' selector -> 111
+	And(a=CheckMidRightBits1, b=sel[2], out=hSelector);
+
+    And(a=aSelector, b=in, out=a);
+    And(a=bSelector, b=in, out=b);
+    And(a=cSelector, b=in, out=c);
+    And(a=dSelector, b=in, out=d);
+    And(a=eSelector, b=in, out=e);
+    And(a=fSelector, b=in, out=f);
+    And(a=gSelector, b=in, out=g);
+    And(a=hSelector, b=in, out=h);
+
+
+}

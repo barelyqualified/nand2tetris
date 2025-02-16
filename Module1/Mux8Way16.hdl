@@ -1,0 +1,316 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/1/Mux8Way16.hdl
+/**
+ * 8-way 16-bit multiplexor:
+ * out = a if sel = 000
+ *       b if sel = 001
+ *       c if sel = 010
+ *       d if sel = 011
+ *       e if sel = 100
+ *       f if sel = 101
+ *       g if sel = 110
+ *       h if sel = 111
+ */
+CHIP Mux8Way16 {
+    IN a[16], b[16], c[16], d[16],
+       e[16], f[16], g[16], h[16],
+       sel[3];
+    OUT out[16];
+
+    PARTS:
+    // NOT ALL THREE SELECT ELEMENTS
+    Nand(a=sel[0], b=sel[0], out=NotSel0);
+    Nand(a=sel[1], b=sel[1], out=NotSel1);
+    Nand(a=sel[2], b=sel[2], out=NotSel2);
+
+    // Position checkers -> mentions used selectors
+    And(a=NotSel1, b=NotSel0, out=CheckMidRightBits0); // Used: a, e
+	And(a=sel[0], b=NotSel1, out=CheckMid0Right1Bits); // Used: b, f
+	And(a=sel[1], b=NotSel0, out=CheckMid1Right0Bits); // Used: c, g
+	And(a=sel[0], b=sel[1], out=CheckMidRightBits1); // Used: d, h
+	
+    // Check for 'a' selector -> 000
+    And(a=CheckMidRightBits0, b=NotSel2, out=aSelector);
+
+    // Check for 'b' selector -> 001
+    And(a=CheckMid0Right1Bits, b=NotSel2, out=bSelector);
+    
+    // Check for 'c' selector -> 010
+    And(a=CheckMid1Right0Bits, b=NotSel2, out=cSelector);
+
+    // Check for 'd' selector -> 011
+	And(a=CheckMidRightBits1, b=NotSel2, out=dSelector);
+
+    // Check for 'e' selector -> 100
+	And(a=CheckMidRightBits0, b=sel[2], out=eSelector);
+	
+    // Check for 'f' selector -> 101
+	And(a=CheckMid0Right1Bits, b=sel[2], out=fSelector);
+
+    // Check for 'g' selector -> 110
+	And(a=CheckMid1Right0Bits, b=sel[2], out=gSelector);
+	
+    // Check for 'h' selector -> 111
+	And(a=CheckMidRightBits1, b=sel[2], out=hSelector);
+	
+	Nand(a=a[0], b=aSelector, out=aCheck0 );
+    Nand(a=a[1], b=aSelector, out=aCheck1 );
+    Nand(a=a[2], b=aSelector, out=aCheck2 );
+    Nand(a=a[3], b=aSelector, out=aCheck3 );
+    Nand(a=a[4], b=aSelector, out=aCheck4 );
+    Nand(a=a[5], b=aSelector, out=aCheck5 );
+    Nand(a=a[6], b=aSelector, out=aCheck6 );
+    Nand(a=a[7], b=aSelector, out=aCheck7 );
+    Nand(a=a[8], b=aSelector, out=aCheck8 );
+    Nand(a=a[9], b=aSelector, out=aCheck9 );
+    Nand(a=a[10], b=aSelector, out=aCheck10);
+    Nand(a=a[11], b=aSelector, out=aCheck11);
+    Nand(a=a[12], b=aSelector, out=aCheck12);
+    Nand(a=a[13], b=aSelector, out=aCheck13);
+    Nand(a=a[14], b=aSelector, out=aCheck14);
+    Nand(a=a[15], b=aSelector, out=aCheck15);
+	
+	Nand(a=b[0], b=bSelector, out=bCheck0 );
+    Nand(a=b[1], b=bSelector, out=bCheck1 );
+    Nand(a=b[2], b=bSelector, out=bCheck2 );
+    Nand(a=b[3], b=bSelector, out=bCheck3 );
+    Nand(a=b[4], b=bSelector, out=bCheck4 );
+    Nand(a=b[5], b=bSelector, out=bCheck5 );
+    Nand(a=b[6], b=bSelector, out=bCheck6 );
+    Nand(a=b[7], b=bSelector, out=bCheck7 );
+    Nand(a=b[8], b=bSelector, out=bCheck8 );
+    Nand(a=b[9], b=bSelector, out=bCheck9 );
+    Nand(a=b[10], b=bSelector, out=bCheck10);
+    Nand(a=b[11], b=bSelector, out=bCheck11);
+    Nand(a=b[12], b=bSelector, out=bCheck12);
+    Nand(a=b[13], b=bSelector, out=bCheck13);
+    Nand(a=b[14], b=bSelector, out=bCheck14);
+    Nand(a=b[15], b=bSelector, out=bCheck15);
+	
+	Nand(a=c[0], b=cSelector, out=cCheck0 );
+    Nand(a=c[1], b=cSelector, out=cCheck1 );
+    Nand(a=c[2], b=cSelector, out=cCheck2 );
+    Nand(a=c[3], b=cSelector, out=cCheck3 );
+    Nand(a=c[4], b=cSelector, out=cCheck4 );
+    Nand(a=c[5], b=cSelector, out=cCheck5 );
+    Nand(a=c[6], b=cSelector, out=cCheck6 );
+    Nand(a=c[7], b=cSelector, out=cCheck7 );
+    Nand(a=c[8], b=cSelector, out=cCheck8 );
+    Nand(a=c[9], b=cSelector, out=cCheck9 );
+    Nand(a=c[10], b=cSelector, out=cCheck10);
+    Nand(a=c[11], b=cSelector, out=cCheck11);
+    Nand(a=c[12], b=cSelector, out=cCheck12);
+    Nand(a=c[13], b=cSelector, out=cCheck13);
+    Nand(a=c[14], b=cSelector, out=cCheck14);
+    Nand(a=c[15], b=cSelector, out=cCheck15);
+	
+	Nand(a=d[0], b=dSelector, out=dCheck0 );
+    Nand(a=d[1], b=dSelector, out=dCheck1 );
+    Nand(a=d[2], b=dSelector, out=dCheck2 );
+    Nand(a=d[3], b=dSelector, out=dCheck3 );
+    Nand(a=d[4], b=dSelector, out=dCheck4 );
+    Nand(a=d[5], b=dSelector, out=dCheck5 );
+    Nand(a=d[6], b=dSelector, out=dCheck6 );
+    Nand(a=d[7], b=dSelector, out=dCheck7 );
+    Nand(a=d[8], b=dSelector, out=dCheck8 );
+    Nand(a=d[9], b=dSelector, out=dCheck9 );
+    Nand(a=d[10], b=dSelector, out=dCheck10);
+    Nand(a=d[11], b=dSelector, out=dCheck11);
+    Nand(a=d[12], b=dSelector, out=dCheck12);
+    Nand(a=d[13], b=dSelector, out=dCheck13);
+    Nand(a=d[14], b=dSelector, out=dCheck14);
+    Nand(a=d[15], b=dSelector, out=dCheck15);		
+	
+	Nand(a=e[0], b=eSelector, out=eCheck0 );
+    Nand(a=e[1], b=eSelector, out=eCheck1 );
+    Nand(a=e[2], b=eSelector, out=eCheck2 );
+    Nand(a=e[3], b=eSelector, out=eCheck3 );
+    Nand(a=e[4], b=eSelector, out=eCheck4 );
+    Nand(a=e[5], b=eSelector, out=eCheck5 );
+    Nand(a=e[6], b=eSelector, out=eCheck6 );
+    Nand(a=e[7], b=eSelector, out=eCheck7 );
+    Nand(a=e[8], b=eSelector, out=eCheck8 );
+    Nand(a=e[9], b=eSelector, out=eCheck9 );
+    Nand(a=e[10], b=eSelector, out=eCheck10);
+    Nand(a=e[11], b=eSelector, out=eCheck11);
+    Nand(a=e[12], b=eSelector, out=eCheck12);
+    Nand(a=e[13], b=eSelector, out=eCheck13);
+    Nand(a=e[14], b=eSelector, out=eCheck14);
+    Nand(a=e[15], b=eSelector, out=eCheck15);
+
+	Nand(a=f[0], b=fSelector, out=fCheck0 );
+    Nand(a=f[1], b=fSelector, out=fCheck1 );
+    Nand(a=f[2], b=fSelector, out=fCheck2 );
+    Nand(a=f[3], b=fSelector, out=fCheck3 );
+    Nand(a=f[4], b=fSelector, out=fCheck4 );
+    Nand(a=f[5], b=fSelector, out=fCheck5 );
+    Nand(a=f[6], b=fSelector, out=fCheck6 );
+    Nand(a=f[7], b=fSelector, out=fCheck7 );
+    Nand(a=f[8], b=fSelector, out=fCheck8 );
+    Nand(a=f[9], b=fSelector, out=fCheck9 );
+    Nand(a=f[10], b=fSelector, out=fCheck10);
+    Nand(a=f[11], b=fSelector, out=fCheck11);
+    Nand(a=f[12], b=fSelector, out=fCheck12);
+    Nand(a=f[13], b=fSelector, out=fCheck13);
+    Nand(a=f[14], b=fSelector, out=fCheck14);
+    Nand(a=f[15], b=fSelector, out=fCheck15);	
+	
+	Nand(a=g[0 ], b=gSelector, out=gCheck0 );
+    Nand(a=g[1 ], b=gSelector, out=gCheck1 );
+    Nand(a=g[2 ], b=gSelector, out=gCheck2 );
+    Nand(a=g[3 ], b=gSelector, out=gCheck3 );
+    Nand(a=g[4 ], b=gSelector, out=gCheck4 );
+    Nand(a=g[5 ], b=gSelector, out=gCheck5 );
+    Nand(a=g[6 ], b=gSelector, out=gCheck6 );
+    Nand(a=g[7 ], b=gSelector, out=gCheck7 );
+    Nand(a=g[8 ], b=gSelector, out=gCheck8 );
+    Nand(a=g[9 ], b=gSelector, out=gCheck9 );
+    Nand(a=g[10], b=gSelector, out=gCheck10);
+    Nand(a=g[11], b=gSelector, out=gCheck11);
+    Nand(a=g[12], b=gSelector, out=gCheck12);
+    Nand(a=g[13], b=gSelector, out=gCheck13);
+    Nand(a=g[14], b=gSelector, out=gCheck14);
+    Nand(a=g[15], b=gSelector, out=gCheck15);
+
+
+	Nand(a=h[0 ], b=hSelector, out=hCheck0 );
+    Nand(a=h[1 ], b=hSelector, out=hCheck1 );
+    Nand(a=h[2 ], b=hSelector, out=hCheck2 );
+    Nand(a=h[3 ], b=hSelector, out=hCheck3 );
+    Nand(a=h[4 ], b=hSelector, out=hCheck4 );
+    Nand(a=h[5 ], b=hSelector, out=hCheck5 );
+    Nand(a=h[6 ], b=hSelector, out=hCheck6 );
+    Nand(a=h[7 ], b=hSelector, out=hCheck7 );
+    Nand(a=h[8 ], b=hSelector, out=hCheck8 );
+    Nand(a=h[9 ], b=hSelector, out=hCheck9 );
+    Nand(a=h[10], b=hSelector, out=hCheck10);
+    Nand(a=h[11], b=hSelector, out=hCheck11);
+    Nand(a=h[12], b=hSelector, out=hCheck12);
+    Nand(a=h[13], b=hSelector, out=hCheck13);
+    Nand(a=h[14], b=hSelector, out=hCheck14);
+    Nand(a=h[15], b=hSelector, out=hCheck15);	
+
+
+	Nand(a=aCheck0 , b=bCheck0 , out=abCheck0 );
+	Nand(a=aCheck1 , b=bCheck1 , out=abCheck1 );
+	Nand(a=aCheck2 , b=bCheck2 , out=abCheck2 );
+	Nand(a=aCheck3 , b=bCheck3 , out=abCheck3 );
+	Nand(a=aCheck4 , b=bCheck4 , out=abCheck4 );
+	Nand(a=aCheck5 , b=bCheck5 , out=abCheck5 );
+	Nand(a=aCheck6 , b=bCheck6 , out=abCheck6 );
+	Nand(a=aCheck7 , b=bCheck7 , out=abCheck7 );
+	Nand(a=aCheck8 , b=bCheck8 , out=abCheck8 );
+	Nand(a=aCheck9 , b=bCheck9 , out=abCheck9 );
+	Nand(a=aCheck10, b=bCheck10, out=abCheck10);
+	Nand(a=aCheck11, b=bCheck11, out=abCheck11);
+	Nand(a=aCheck12, b=bCheck12, out=abCheck12);
+	Nand(a=aCheck13, b=bCheck13, out=abCheck13);
+	Nand(a=aCheck14, b=bCheck14, out=abCheck14);
+	Nand(a=aCheck15, b=bCheck15, out=abCheck15);
+	
+	Nand(a=cCheck0 , b=dCheck0 , out=cdCheck0 );
+	Nand(a=cCheck1 , b=dCheck1 , out=cdCheck1 );
+	Nand(a=cCheck2 , b=dCheck2 , out=cdCheck2 );
+	Nand(a=cCheck3 , b=dCheck3 , out=cdCheck3 );
+	Nand(a=cCheck4 , b=dCheck4 , out=cdCheck4 );
+	Nand(a=cCheck5 , b=dCheck5 , out=cdCheck5 );
+	Nand(a=cCheck6 , b=dCheck6 , out=cdCheck6 );
+	Nand(a=cCheck7 , b=dCheck7 , out=cdCheck7 );
+	Nand(a=cCheck8 , b=dCheck8 , out=cdCheck8 );
+	Nand(a=cCheck9 , b=dCheck9 , out=cdCheck9 );
+	Nand(a=cCheck10, b=dCheck10, out=cdCheck10);
+	Nand(a=cCheck11, b=dCheck11, out=cdCheck11);
+	Nand(a=cCheck12, b=dCheck12, out=cdCheck12);
+	Nand(a=cCheck13, b=dCheck13, out=cdCheck13);
+	Nand(a=cCheck14, b=dCheck14, out=cdCheck14);
+	Nand(a=cCheck15, b=dCheck15, out=cdCheck15);
+	
+	Nand(a=eCheck0 , b=fCheck0 , out=efCheck0 );
+	Nand(a=eCheck1 , b=fCheck1 , out=efCheck1 );
+	Nand(a=eCheck2 , b=fCheck2 , out=efCheck2 );
+	Nand(a=eCheck3 , b=fCheck3 , out=efCheck3 );
+	Nand(a=eCheck4 , b=fCheck4 , out=efCheck4 );
+	Nand(a=eCheck5 , b=fCheck5 , out=efCheck5 );
+	Nand(a=eCheck6 , b=fCheck6 , out=efCheck6 );
+	Nand(a=eCheck7 , b=fCheck7 , out=efCheck7 );
+	Nand(a=eCheck8 , b=fCheck8 , out=efCheck8 );
+	Nand(a=eCheck9 , b=fCheck9 , out=efCheck9 );
+	Nand(a=eCheck10, b=fCheck10, out=efCheck10);
+	Nand(a=eCheck11, b=fCheck11, out=efCheck11);
+	Nand(a=eCheck12, b=fCheck12, out=efCheck12);
+	Nand(a=eCheck13, b=fCheck13, out=efCheck13);
+	Nand(a=eCheck14, b=fCheck14, out=efCheck14);
+	Nand(a=eCheck15, b=fCheck15, out=efCheck15);
+	
+	Nand(a=gCheck0 , b=hCheck0 , out=ghCheck0 );
+	Nand(a=gCheck1 , b=hCheck1 , out=ghCheck1 );
+	Nand(a=gCheck2 , b=hCheck2 , out=ghCheck2 );
+	Nand(a=gCheck3 , b=hCheck3 , out=ghCheck3 );
+	Nand(a=gCheck4 , b=hCheck4 , out=ghCheck4 );
+	Nand(a=gCheck5 , b=hCheck5 , out=ghCheck5 );
+	Nand(a=gCheck6 , b=hCheck6 , out=ghCheck6 );
+	Nand(a=gCheck7 , b=hCheck7 , out=ghCheck7 );
+	Nand(a=gCheck8 , b=hCheck8 , out=ghCheck8 );
+	Nand(a=gCheck9 , b=hCheck9 , out=ghCheck9 );
+	Nand(a=gCheck10, b=hCheck10, out=ghCheck10);
+	Nand(a=gCheck11, b=hCheck11, out=ghCheck11);
+	Nand(a=gCheck12, b=hCheck12, out=ghCheck12);
+	Nand(a=gCheck13, b=hCheck13, out=ghCheck13);
+	Nand(a=gCheck14, b=hCheck14, out=ghCheck14);
+	Nand(a=gCheck15, b=hCheck15, out=ghCheck15);
+	
+	
+	Xor(a=abCheck0 , b=cdCheck0 , out=abcdCheck0 );
+	Xor(a=abCheck1 , b=cdCheck1 , out=abcdCheck1 );
+	Xor(a=abCheck2 , b=cdCheck2 , out=abcdCheck2 );
+	Xor(a=abCheck3 , b=cdCheck3 , out=abcdCheck3 );
+	Xor(a=abCheck4 , b=cdCheck4 , out=abcdCheck4 );
+	Xor(a=abCheck5 , b=cdCheck5 , out=abcdCheck5 );
+	Xor(a=abCheck6 , b=cdCheck6 , out=abcdCheck6 );
+	Xor(a=abCheck7 , b=cdCheck7 , out=abcdCheck7 );
+	Xor(a=abCheck8 , b=cdCheck8 , out=abcdCheck8 );
+	Xor(a=abCheck9 , b=cdCheck9 , out=abcdCheck9 );
+	Xor(a=abCheck10, b=cdCheck10, out=abcdCheck10);
+	Xor(a=abCheck11, b=cdCheck11, out=abcdCheck11);
+	Xor(a=abCheck12, b=cdCheck12, out=abcdCheck12);
+	Xor(a=abCheck13, b=cdCheck13, out=abcdCheck13);
+	Xor(a=abCheck14, b=cdCheck14, out=abcdCheck14);
+	Xor(a=abCheck15, b=cdCheck15, out=abcdCheck15);
+	
+	Xor(a=efCheck0 , b=ghCheck0 , out=efghCheck0 );
+	Xor(a=efCheck1 , b=ghCheck1 , out=efghCheck1 );
+	Xor(a=efCheck2 , b=ghCheck2 , out=efghCheck2 );
+	Xor(a=efCheck3 , b=ghCheck3 , out=efghCheck3 );
+	Xor(a=efCheck4 , b=ghCheck4 , out=efghCheck4 );
+	Xor(a=efCheck5 , b=ghCheck5 , out=efghCheck5 );
+	Xor(a=efCheck6 , b=ghCheck6 , out=efghCheck6 );
+	Xor(a=efCheck7 , b=ghCheck7 , out=efghCheck7 );
+	Xor(a=efCheck8 , b=ghCheck8 , out=efghCheck8 );
+	Xor(a=efCheck9 , b=ghCheck9 , out=efghCheck9 );
+	Xor(a=efCheck10, b=ghCheck10, out=efghCheck10);
+	Xor(a=efCheck11, b=ghCheck11, out=efghCheck11);
+	Xor(a=efCheck12, b=ghCheck12, out=efghCheck12);
+	Xor(a=efCheck13, b=ghCheck13, out=efghCheck13);
+	Xor(a=efCheck14, b=ghCheck14, out=efghCheck14);
+	Xor(a=efCheck15, b=ghCheck15, out=efghCheck15);	
+	
+	Xor(a=abcdCheck0 , b=efghCheck0 , out=out[0] );	
+	Xor(a=abcdCheck1 , b=efghCheck1 , out=out[1] );
+	Xor(a=abcdCheck2 , b=efghCheck2 , out=out[2] );
+	Xor(a=abcdCheck3 , b=efghCheck3 , out=out[3] );
+	Xor(a=abcdCheck4 , b=efghCheck4 , out=out[4] );
+	Xor(a=abcdCheck5 , b=efghCheck5 , out=out[5] );
+	Xor(a=abcdCheck6 , b=efghCheck6 , out=out[6] );
+	Xor(a=abcdCheck7 , b=efghCheck7 , out=out[7] );
+	Xor(a=abcdCheck8 , b=efghCheck8 , out=out[8] );
+	Xor(a=abcdCheck9 , b=efghCheck9 , out=out[9] );
+	Xor(a=abcdCheck10, b=efghCheck10, out=out[10]);
+	Xor(a=abcdCheck11, b=efghCheck11, out=out[11]);
+	Xor(a=abcdCheck12, b=efghCheck12, out=out[12]);
+	Xor(a=abcdCheck13, b=efghCheck13, out=out[13]);
+	Xor(a=abcdCheck14, b=efghCheck14, out=out[14]);
+	Xor(a=abcdCheck15, b=efghCheck15, out=out[15]);	
+
+}

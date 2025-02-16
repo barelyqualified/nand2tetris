@@ -1,0 +1,36 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/1/DMux4Way.hdl
+/**
+ * 4-way demultiplexor:
+ * [a, b, c, d] = [in, 0, 0, 0] if sel = 00
+ *                [0, in, 0, 0] if sel = 01
+ *                [0, 0, in, 0] if sel = 10
+ *                [0, 0, 0, in] if sel = 11
+ */
+CHIP DMux4Way {
+    IN in, sel[2];
+    OUT a, b, c, d;
+
+    PARTS:
+    // NOT FIRST ELEMENT OF SEL
+    Nand(a=sel[0],b=sel[0], out=NotFirst);
+    // NOT SECOND ELEMENT OF SEL
+    Nand(a=sel[1],b=sel[1], out=NotSecond);
+
+    // Check for a output
+    And(a=NotFirst, b=NotSecond, out=aOutput);
+    // Check for d output
+    And(a=sel[0],b=sel[1],out=dOutput);
+    // Check if b output
+    And(a=sel[0], b=NotSecond, out=bOutput);
+    // Check if c output
+    And(a=sel[1], b=NotFirst, out=cOutput);
+
+    And(a=aOutput, b=in, out=a);
+    And(a=bOutput, b=in, out=b);
+    And(a=cOutput, b=in, out=c);
+    And(a=dOutput, b=in, out=d);
+
+}

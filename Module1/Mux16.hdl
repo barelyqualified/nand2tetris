@@ -1,0 +1,72 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/1/Mux16.hdl
+/**
+ * 16-bit multiplexor: 
+ * for i = 0, ..., 15:
+ * if (sel = 0) out[i] = a[i], else out[i] = b[i]
+ */
+CHIP Mux16 {
+    IN a[16], b[16], sel;
+    OUT out[16];
+
+    PARTS:
+    Nand(a=sel, b=sel, out=NotSel);
+
+    Nand(a=a[0 ], b=NotSel, out=CheckA0 );
+    Nand(a=a[1 ], b=NotSel, out=CheckA1 );
+    Nand(a=a[2 ], b=NotSel, out=CheckA2 );
+    Nand(a=a[3 ], b=NotSel, out=CheckA3 );
+    Nand(a=a[4 ], b=NotSel, out=CheckA4 );
+    Nand(a=a[5 ], b=NotSel, out=CheckA5 );
+    Nand(a=a[6 ], b=NotSel, out=CheckA6 );
+    Nand(a=a[7 ], b=NotSel, out=CheckA7 );
+    Nand(a=a[8 ], b=NotSel, out=CheckA8 );
+    Nand(a=a[9 ], b=NotSel, out=CheckA9 );
+    Nand(a=a[10], b=NotSel, out=CheckA10);
+    Nand(a=a[11], b=NotSel, out=CheckA11);
+    Nand(a=a[12], b=NotSel, out=CheckA12);
+    Nand(a=a[13], b=NotSel, out=CheckA13);
+    Nand(a=a[14], b=NotSel, out=CheckA14);
+    Nand(a=a[15], b=NotSel, out=CheckA15);
+	
+
+    Nand(a=b[0 ], b=sel, out=CheckB0 );
+    Nand(a=b[1 ], b=sel, out=CheckB1 );
+    Nand(a=b[2 ], b=sel, out=CheckB2 );
+    Nand(a=b[3 ], b=sel, out=CheckB3 );
+    Nand(a=b[4 ], b=sel, out=CheckB4 );
+    Nand(a=b[5 ], b=sel, out=CheckB5 );
+    Nand(a=b[6 ], b=sel, out=CheckB6 );
+    Nand(a=b[7 ], b=sel, out=CheckB7 );
+    Nand(a=b[8 ], b=sel, out=CheckB8 );
+    Nand(a=b[9 ], b=sel, out=CheckB9 );
+    Nand(a=b[10], b=sel, out=CheckB10);
+    Nand(a=b[11], b=sel, out=CheckB11);
+    Nand(a=b[12], b=sel, out=CheckB12);
+    Nand(a=b[13], b=sel, out=CheckB13);
+    Nand(a=b[14], b=sel, out=CheckB14);
+    Nand(a=b[15], b=sel, out=CheckB15);
+	
+	Nand(a=CheckA0 , b=CheckB0 , out=out[0 ]);
+	Nand(a=CheckA1 , b=CheckB1 , out=out[1 ]);
+	Nand(a=CheckA2 , b=CheckB2 , out=out[2 ]);
+	Nand(a=CheckA3 , b=CheckB3 , out=out[3 ]);
+	Nand(a=CheckA4 , b=CheckB4 , out=out[4 ]);
+	Nand(a=CheckA5 , b=CheckB5 , out=out[5 ]);
+	Nand(a=CheckA6 , b=CheckB6 , out=out[6 ]);
+	Nand(a=CheckA7 , b=CheckB7 , out=out[7 ]);
+	Nand(a=CheckA8 , b=CheckB8 , out=out[8 ]);
+	Nand(a=CheckA9 , b=CheckB9 , out=out[9 ]);
+	Nand(a=CheckA10, b=CheckB10, out=out[10]);
+	Nand(a=CheckA11, b=CheckB11, out=out[11]);
+	Nand(a=CheckA12, b=CheckB12, out=out[12]);
+	Nand(a=CheckA13, b=CheckB13, out=out[13]);
+	Nand(a=CheckA14, b=CheckB14, out=out[14]);
+	Nand(a=CheckA15, b=CheckB15, out=out[15]);
+
+	
+
+    
+}

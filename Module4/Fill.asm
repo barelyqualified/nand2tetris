@@ -29,9 +29,9 @@ M=D
 A=M
 D=M
 @FILLLOOP
-D-1;JGE // if kbr_arr >= 0
-@UNFILLLOOP
-D;JEQ
+D-1;JGE // if kbd_arr >= 0
+@UNFILLLOOP 
+D;JEQ // if kbd_arr == 0
 
 @KEYLOOP
 0;JMP
@@ -42,7 +42,7 @@ D;JEQ
 D=M
 @n
 D=D-M
-@KEYLOOP
+@KEYLOOP /* Read the value from i and subtract n from it, if it is equal to 0, we fulfilling our branch. */
 D;JEQ // if i == n GOTO KEYLOOP
 
 @screen_arr

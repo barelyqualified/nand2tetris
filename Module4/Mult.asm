@@ -54,7 +54,7 @@ D=A
 @R2
 M=D
 
-@END
+@END // Prevent any NOP slide attacks.
 
 
 (END)

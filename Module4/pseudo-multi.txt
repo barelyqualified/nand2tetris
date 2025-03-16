@@ -1,12 +1,13 @@
 // R0 * R1 = R2
-// No need to check for any values.
+// R2 should be initialized in case the program should be rerun.
+// No need to check for any values. We can assume that R1, R0 >= 0 and R2 <= 32768
 
 value1 = R0
 value2 = R1
 
 i = 0
 temp_result = 0
-R2 = 0 // incase we run the program again.
+R2 = 0 
 
 
 calc_loop:

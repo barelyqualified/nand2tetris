@@ -1,4 +1,6 @@
-// Assigns RAM[16384..24575] with -1
+// Assigns RAM[16384..24575] with -1 or 0 depending if there are any values inside of RAM[24576].
+// Reformulating the sentence in a more human-readable way: 
+// This is meant to represent pseudo-code which checks the Keyboard memory segment for any input and then fills the Screen with black pixels or white ones.
 
 
 

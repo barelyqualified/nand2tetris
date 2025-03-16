@@ -13,7 +13,7 @@ CHIP FullAdder {
     PARTS:
     /* sum implementation */
     Xor(a = a , b =b , out = xorAB );
-    Xor(a= xorAB, b= c, out= xorABC, out= sum);
+    Xor(a= xorAB, b= c, out= sum);
 
     /* carry implementation */
     Or(a= a, b= b, out= orAB);

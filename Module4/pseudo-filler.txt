@@ -1,0 +1,26 @@
+// Assigns RAM[16384..24575] with -1
+
+
+
+screen_arr = 16384
+kbd_arr = 24576
+
+KEYLOOP:
+    i = 0
+    n = 8192
+    if KEY >= 1 goto FILLLOOP
+    elif KEY == 0 goto UNFILLLOOP
+    GOTO KEYLOOP
+
+UNFILLLOOP:
+if i == n goto KEYLOOP
+RAM[arr+i] = 0
+i = i + 1
+if KEY >= 1 goto KEYLOOP
+
+FILLLOOP:
+if i == n goto KEYLOOP
+RAM[arr+i] = -1
+i = i + 1
+if KEY == 0 goto KEYLOOP
+

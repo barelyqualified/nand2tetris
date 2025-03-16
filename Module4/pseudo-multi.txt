@@ -1,0 +1,23 @@
+// R0 * R1 = R2
+// No need to check for any values.
+
+value1 = R0
+value2 = R1
+
+i = 0
+temp_result = 0
+R2 = 0 // incase we run the program again.
+
+
+calc_loop:
+    if i == value2 GOTO store_result
+    temp_result = temp_result + value1
+    i = i + 1
+
+store_result:
+    temp_result = RAM[2]
+    GOTO END
+
+
+
+

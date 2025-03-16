@@ -1,0 +1,37 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/3/a/PC.hdl
+/**
+ * A 16-bit counter.
+ * if      reset(t): out(t+1) = 0
+ * else if load(t):  out(t+1) = in(t)
+ * else if inc(t):   out(t+1) = out(t) + 1
+ * else              out(t+1) = out(t)
+ */
+CHIP PC {
+    IN in[16], reset, load, inc;
+    OUT out[16];
+    
+    PARTS:
+	/* Flip-Flop bits */
+	DFF(in=inc, out=dfinc);
+	DFF(in=load, out=dfload);
+	DFF(in=reset, out=dfreset);
+	
+    /* Check if there is a reset needed */
+	Mux16(a=in, b=false, sel=reset, out=datar);
+    /* Load the register when needed. */
+    Register(in=datar , load=true , out=loadregister);
+    
+    /* Increment */
+    Inc16(in=datar, out=plusload);
+    Inc16(in=incregister, out=fml);
+    Mux4Way16(c=datar , d=datar , a=plusload , b=fml ,sel[1]=load, sel[0]=inc , out=incmux);
+
+    Register(in=incmux, load=inc, out=incregister);
+	/* Decide which register to put out */
+	
+	Mux8Way16(a=loadregister, b=incregister, c=loadregister, d=loadregister, e=loadregister ,f=loadregister, g=loadregister, h=loadregister, sel[0]=dfinc, sel[1]=dfload, sel[2]=dfreset, out=out);
+
+}

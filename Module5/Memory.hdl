@@ -1,0 +1,52 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/5/Memory.hdl
+/**
+ * The complete address space of the Hack computer's memory,
+ * including RAM and memory-mapped I/O. 
+ * The chip facilitates read and write operations, as follows:
+ *     Read:  out(t) = Memory[address(t)](t)
+ *     Write: if load(t-1) then Memory[address(t-1)](t) = in(t-1)
+ * In words: the chip always outputs the value stored at the memory 
+ * location specified by address. If load=1, the in value is loaded 
+ * into the memory location specified by address. This value becomes 
+ * available through the out output from the next time step onward.
+ * Address space rules:
+ * Only the upper 16K+8K+1 words of the Memory chip are used. 
+ * Access to address>0x6000 is invalid and reads 0. Access to any address
+ * in the range 0x4000-0x5FFF results in accessing the screen memory 
+ * map. Access to address 0x6000 results in accessing the keyboard 
+ * memory map. The behavior in these addresses is described in the Screen
+  * 8-way 16-bit multiplexor:
+ * out = a if sel = 000
+ *       b if sel = 001
+ *       c if sel = 010
+ *       d if sel = 011
+ *       e if sel = 100
+ *       f if sel = 101
+ *       g if sel = 110
+ *       h if sel = 111
+ * and Keyboard chip specifications given in the lectures and the book.
+ */
+CHIP Memory {
+    IN in[16], load, address[15];
+    OUT out[16];
+
+    PARTS:
+	
+	/* Our special parts >.> */
+    Screen(in=in , load=screeninreal , address=address[0..12] , out=screenpls );
+    Keyboard(out=kbphy );
+	
+	/* Which memory space should be accessed? */
+    DMux(in=load, sel=address[14], a=memoryin, b=screenin);
+    DMux(in=screenin , sel=address[13], a=screeninreal , b=kbdin);
+	
+	
+    RAM16K(in=in , load=memoryin , address=address[0..13] , out=memory );
+    Register(in=kbphy , load=true, out=kb);
+
+	//// 
+    Mux8Way16(a=memory, b=memory , c=memory , d=memory, e=screenpls, f=screenpls, g=kb, h=false , sel=address[12..14] , out=out);
+}
